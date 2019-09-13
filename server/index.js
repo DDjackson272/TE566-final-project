@@ -11,11 +11,28 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-app.get("/", function (req, res) {
-    res.send("Welcome to TE566 Computer Program");
+app.get("/", function(req, res) {
+    res.render("main");
 });
 
-app.post("/employee", function(req, res) {
+app.get("/add/employee", function(req, res) {
+    res.render("addEmployee");
+});
+
+app.get("/list/employee", function(req, res){
+    let selectAll = 'select * from Employee;';
+    db.query(selectAll, function(err, result){
+       if (err) {
+           return res.status(400).json({
+               message: err.message
+           });
+       } else {
+           res.render('listEmployee', {allEmployee: result});
+       }
+    });
+});
+
+app.post("/api/employee", function(req, res) {
     let employeeRecord = {
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
@@ -34,15 +51,13 @@ app.post("/employee", function(req, res) {
            return res.status(400).json({
                message: err.message
            })
+       } else {
+           res.redirect("/list/employee");
        }
     });
-
-    return res.status(200).json({
-        message: "data inserted successfully"
-    })
 });
 
-app.get("/employee", function(req, res){
+app.get("/api/employee", function(req, res){
     let selectAllEmployee = "select * from Employee;";
     db.query(selectAllEmployee, function (err, results){
         if (err) {

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Employee</h1>
+</div>
+<div class="text-center">
+    <table border="1" cellpadding="3" cellspacing="0" align="center" style="width: 80%;margin:auto">
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Address1</th>
+            <th>Address2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>ZipCode</th>
+            <th>SSN</th>
+            <th>WithHolding</th>
+            <th>Salary</th>
+        </tr>
+        <% allEmployee.forEach(function(employee){ %>
+            <tr>
+                <td><%= employee.FirstName %></td>
+                <td><%= employee.LastName %></td>
+                <td><%= employee.Address1%></td>
+                <td><%= employee.Address2%></td>
+                <td><%= employee.City%></td>
+                <td><%= employee.State%></td>
+                <td><%= employee.ZipCode%></td>
+                <td><%= employee.SSN%></td>
+                <td><%= employee.WithHolding%></td>
+                <td><%= employee.Salary%></td>
+            </tr>
+        <% }) %>
+    </table>
+</div>
+
+</body>
+</html>
