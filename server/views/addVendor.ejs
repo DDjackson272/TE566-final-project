@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <div class="row">
+        <div class="col">
+            <h1 style="text-align: center;">Add Vendor</h1>
+            <div style="width:30%; margin: 25px auto;">
+                <form action = "/api/vendor" method="POST">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="CompanyName" placeholder="CompanyName">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="Part" placeholder="Part">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="PricePerUnit" placeholder="PricePerUnit">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="Address1" placeholder="Address1">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="Address2" placeholder="Address2">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="City" placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="State" placeholder="State">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="Zip" placeholder="Zip">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-block">ADD</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

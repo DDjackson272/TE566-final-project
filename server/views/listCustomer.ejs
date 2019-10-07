@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Customer</h1>
+</div>
+<div class="text-center">
+    <table border="1" cellpadding="3" cellspacing="0" align="center" style="width: 80%;margin:auto">
+        <tr>
+            <th>CompanyName</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Address1</th>
+            <th>Address2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>ZipCode</th>
+            <th>Price</th>
+        </tr>
+        <% allCustomer.forEach(function(Customer){ %>
+            <tr>
+                <td><%= Customer.CompanyName%></td>
+                <td><%= Customer.FirstName %></td>
+                <td><%= Customer.LastName %></td>
+                <td><%= Customer.Address1%></td>
+                <td><%= Customer.Address2%></td>
+                <td><%= Customer.City%></td>
+                <td><%= Customer.State%></td>
+                <td><%= Customer.ZipCode%></td>
+                <td><%= Customer.Price%></td>
+            </tr>
+        <% }) %>
+    </table>
+</div>
+
+</body>
+</html>
