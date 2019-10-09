@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Pay Employee</h1>
+</div>
+<div class="container">
+    <div class="row">
+        <span>Employee to Pay:</span>
+        <select name="names">
+            <% employeeNames.forEach(function(employee){ %>
+                <option value="<%= employee.firstName+' '+employee.lastName%>">
+                    <%= employee.firstName+' '+employee.lastName%>
+                </option>
+            <% }) %>
+        </select>
+    </div>
+</div>
+
+</body>
+</html>

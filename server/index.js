@@ -138,6 +138,20 @@ app.post("/api/vendor", function(req, res){
     })
 });
 
+app.get("/pay/employee", function(req, res){
+    let selectName = 'select firstName, lastName from Employee;';
+
+    db.query(selectName, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            });
+        } else {
+            res.render('payEmployee', {employeeNames: result});
+        }
+    });
+});
+
 app.listen(PORT, function () {
     console.log(`Server running on port: ${PORT}`)
 });
