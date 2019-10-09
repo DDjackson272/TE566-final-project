@@ -152,6 +152,38 @@ app.get("/pay/employee", function(req, res){
     });
 });
 
+app.post("/pay/employee", function(req, res){
+    let name = req.body.names;
+    let firstName = name.split(" ")[0];
+    let lastName = name.split(" ")[1];
+    // get salary based on firstName and lastName
+    let salaryQuery = `select Salary from Employee where FirstName="${firstName}" AND LastName="${lastName}";`;
+
+    db.query(salaryQuery, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            })
+        } else {
+            let salary = result[0].Salary;
+            let payRollRecord = {
+                EmployeeFirstName: firstName,
+                EmployeeLastName: lastName,
+                PaymentValue: salary,
+            };
+            db.query('insert into Payroll set ?', payRollRecord, function(err){
+                if (err) {
+                    return res.status(400).json({
+                        message:err.message
+                    })
+                } else {
+                    res.redirect("/");
+                }
+            })
+        }
+    });
+});
+
 app.listen(PORT, function () {
     console.log(`Server running on port: ${PORT}`)
 });

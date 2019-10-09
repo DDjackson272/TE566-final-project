@@ -60,6 +60,14 @@ let vendors = "create table Vendor (" +
     "PRIMARY KEY (vendor_id)" +
     ");";
 
+let payrollEvents = "create table Payroll (" +
+    "event_id int NOT NULL AUTO_INCREMENT," +
+    "EmployeeFirstName varchar(255)," +
+    "EmployeeLastName varchar(255)," +
+    "PaymentValue float(8)," +
+    "PRIMARY KEY (event_id)" +
+    ");";
+
 connection.query(employees, function(err){
     if(err){
         console.log(err.message);
@@ -73,6 +81,12 @@ connection.query(customers, function(err){
 });
 
 connection.query(vendors, function(err){
+    if(err){
+        console.log(err.message);
+    }
+});
+
+connection.query(payrollEvents, function(err){
     if(err){
         console.log(err.message);
     }

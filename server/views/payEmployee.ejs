@@ -12,14 +12,19 @@
 </div>
 <div class="container">
     <div class="row">
-        <span>Employee to Pay:</span>
-        <select name="names">
-            <% employeeNames.forEach(function(employee){ %>
-                <option value="<%= employee.firstName+' '+employee.lastName%>">
-                    <%= employee.firstName+' '+employee.lastName%>
-                </option>
-            <% }) %>
-        </select>
+        <form action = "/pay/employee" method="POST">
+            <span>Employee to Pay:</span>
+            <select name="names">
+                <% employeeNames.forEach(function(employee){ %>
+                    <option value="<%=employee.firstName+' '+employee.lastName%>">
+                        <%=employee.firstName+' '+employee.lastName%>
+                    </option>
+                <% }) %>
+            </select>
+            <div style="width: 30%; margin: 20px auto">
+                <button class="btn btn-lg btn-primary btn-block">PAY</button>
+            </div>
+        </form>
     </div>
 </div>
 
