@@ -17,7 +17,11 @@ connection.connect(function(err){
     console.log('Database connected!');
 });
 
-// first create table in case they do not exist
+// function to drop tables
+function drop(table) {
+    return `drop table if exists ${table};`;
+}
+
 let employees = "create table Employee (" +
     "employee_id int NOT NULL AUTO_INCREMENT," +
     "FirstName varchar(255)," +
@@ -64,7 +68,7 @@ let payrollEvents = "create table Payroll (" +
     "event_id int NOT NULL AUTO_INCREMENT," +
     "EmployeeFirstName varchar(255)," +
     "EmployeeLastName varchar(255)," +
-    "PaymentValue float(8)," +
+    "Disbursement float(8)," +
     "WithholdingValue float(8)," +
     "DatePaid timestamp not null default current_timestamp," +
     "PRIMARY KEY (event_id)" +
@@ -73,12 +77,14 @@ let payrollEvents = "create table Payroll (" +
 let invoices = "create table Invoice (" +
     "invoice_id int NOT NULL AUTO_INCREMENT," +
     "CompanyName varchar(255)," +
-    "UnitNum int," +
+    "Quantity int," +
     "Date timestamp not null default current_timestamp," +
+    "PricePerUnit varchar(255)," +
+    "TotalValue varchar(255)," +
     "PRIMARY KEY (invoice_id)" +
     ");";
 
-let balanceSheet = "create table balance_sheet (" +
+let balanceSheet = "create table BalanceSheet (" +
     "Cash varchar(255)," +
     "AccountsReceivable varchar(255)," +
     "Inventory varchar(255)," +
@@ -91,40 +97,68 @@ let balanceSheet = "create table balance_sheet (" +
     "Mortgage varchar(255)" +
     ");";
 
-connection.query(employees, function(err){
-    if(err){
-        console.log(err.message);
-    }
+let incomeStatement = "create table IncomeStatement (" +
+    "Sales varchar(255)," +
+    "CostOfGoods varchar(255)," +
+    "Payrolls varchar(255)," +
+    "PayrollWithholding varchar(255)," +
+    "Bills varchar(255)," +
+    "AnnualExpenses varchar(255)," +
+    "OtherIncome varchar(255)" +
+    ");";
+
+let purchaseOrder = "create table PurchaseOrder (" +
+    "PurchaseOrder_id int," +
+    "PurchaseOrderDate timestamp not null default current_timestamp," +
+    "Supplier varchar(255)," +
+    "Part varchar(255)," +
+    "Quantity varchar(255)," +
+    "PricePerPart varchar(255)," +
+    "TotalValue varchar(255)," +
+    "PRIMARY KEY (PurchaseOrder_id)" +
+    ");";
+
+let inventoryBuy = "create table InventoryBuy (" +
+    "Part varchar(255)," +
+    "PricePerUnit varchar(255)," +
+    "Quantity varchar(255)," +
+    "TotalValue varchar(255)" +
+    ");";
+
+let inventorySell = "create table InventorySell (" +
+    "CanBeBuildUnits varchar(255)," +
+    "CompleteUnits varchar(255)," +
+    "TotalValue varchar(255)" +
+    ");";
+
+let nameTable = {
+    Employee: employees,
+    Customer: customers,
+    Vendor: vendors,
+    Payroll: payrollEvents,
+    Invoice: invoices,
+    BalanceSheet: balanceSheet,
+    IncomeStatement: incomeStatement,
+    PurchaseOrder: purchaseOrder,
+    InventoryBuy: inventoryBuy,
+    InventorySell: inventorySell
+};
+
+// Initialize tables: delete the old ones and create new ones.
+Object.keys(nameTable).forEach(function(name){
+    connection.query(drop(name), function(err){
+        if (err) {
+            console.log(`Error when deleting table ${name}!`);
+        } else {
+            connection.query(nameTable[name], function(err){
+                if (err) {
+                    console.log(`Error when creating new table ${name}!`);
+                }
+            })
+        }
+    })
 });
 
-connection.query(customers, function(err){
-    if(err){
-        console.log(err.message);
-    }
-});
-
-connection.query(vendors, function(err){
-    if(err){
-        console.log(err.message);
-    }
-});
-
-connection.query(payrollEvents, function(err){
-    if(err){
-        console.log(err.message);
-    }
-});
-
-connection.query(invoices, function(err){
-   if(err){
-       console.log(err.message);
-   }
-});
-
-connection.query(balanceSheet, function(err){
-    if(err){
-        console.log(err.message)
-    }
-});
+// Add some dummy data in to tables
 
 module.exports = connection;
