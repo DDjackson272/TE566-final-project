@@ -170,12 +170,16 @@ app.post("/pay/employee", function(req, res){
                 message: err.message
             })
         } else {
+            if (result.length === 0){
+                res.redirect("/");
+                return;
+            }
             let salary = result[0].Salary;
             let withHolding = result[0].WithHolding;
             let payRollRecord = {
                 EmployeeFirstName: firstName,
                 EmployeeLastName: lastName,
-                PaymentValue: salary,
+                Disbursement: salary,
                 WithholdingValue: withHolding
             };
             db.query('insert into Payroll set ?', payRollRecord, function(err){
@@ -192,7 +196,7 @@ app.post("/pay/employee", function(req, res){
 });
 
 app.get('/payroll/employee', function(req, res){
-    let selectPayroll = 'select EmployeeFirstName, EmployeeLastName, PaymentValue, WithholdingValue,' +
+    let selectPayroll = 'select EmployeeFirstName, EmployeeLastName, Disbursement, WithholdingValue,' +
         'DATE(DatePaid) as DatePaid from Payroll;';
 
     db.query(selectPayroll, function(err, result){
@@ -201,7 +205,6 @@ app.get('/payroll/employee', function(req, res){
                 message: err.message
             })
         } else {
-            console.log();
             res.render('payrollEmployee', {payrolls: result});
         }
     });
