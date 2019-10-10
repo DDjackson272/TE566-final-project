@@ -6,6 +6,8 @@ const PORT = 81;
 
 const app = express();
 
+let TOTAL_INVENTORY = 1000;
+
 app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -152,12 +154,15 @@ app.get("/pay/employee", function(req, res){
     });
 });
 
+// total Disbursement + withholding (sum of all sort of tax) = salary before tax
+// total withholding = federal tax + state tax + social security tax + medicare
 app.post("/pay/employee", function(req, res){
     let name = req.body.names;
     let firstName = name.split(" ")[0];
     let lastName = name.split(" ")[1];
     // get salary based on firstName and lastName
-    let salaryQuery = `select Salary from Employee where FirstName="${firstName}" AND LastName="${lastName}";`;
+    let salaryQuery = `select Salary, WithHolding 
+    from Employee where FirstName="${firstName}" AND LastName="${lastName}";`;
 
     db.query(salaryQuery, function(err, result){
         if (err) {
@@ -166,10 +171,12 @@ app.post("/pay/employee", function(req, res){
             })
         } else {
             let salary = result[0].Salary;
+            let withHolding = result[0].WithHolding;
             let payRollRecord = {
                 EmployeeFirstName: firstName,
                 EmployeeLastName: lastName,
                 PaymentValue: salary,
+                WithholdingValue: withHolding
             };
             db.query('insert into Payroll set ?', payRollRecord, function(err){
                 if (err) {
@@ -182,6 +189,68 @@ app.post("/pay/employee", function(req, res){
             })
         }
     });
+});
+
+app.get('/payroll/employee', function(req, res){
+    let selectPayroll = 'select EmployeeFirstName, EmployeeLastName, PaymentValue, WithholdingValue,' +
+        'DATE(DatePaid) as DatePaid from Payroll;';
+
+    db.query(selectPayroll, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            })
+        } else {
+            console.log();
+            res.render('payrollEmployee', {payrolls: result});
+        }
+    });
+});
+
+app.get("/create/invoice", function(req, res){
+    let selectName = 'select CompanyName from Customer;';
+
+    db.query(selectName, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            });
+        } else {
+            res.render('invoice', {customers: result, total: TOTAL_INVENTORY});
+        }
+    });
+});
+
+app.post("/create/invoice", function(req, res){
+    let invoiceRecord = {
+        CompanyName: req.body.names,
+        UnitNum: req.body.Units
+    };
+
+    db.query('insert into Invoice set ?', invoiceRecord, function(err){
+        if (err) {
+            return res.status(400).json({
+                message:err.message
+            });
+        } else {
+            TOTAL_INVENTORY -= req.body.Units;
+            res.redirect("/");
+        }
+    })
+});
+
+app.get("/invoice/history", function(req, res){
+    let query = "select CompanyName, UnitNum, DATE(Date) as Date from Invoice;";
+
+    db.query(query, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message:err.message
+            })
+        } else {
+            res.render('invoiceHistory', {invoices: result})
+        }
+    })
 });
 
 app.listen(PORT, function () {

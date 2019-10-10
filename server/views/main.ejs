@@ -8,9 +8,11 @@
 </head>
 <body>
 <div class="container">
+    <div class="text-center">
+        <h1>Southwest Some Company</h1>
+    </div>
     <div class="row">
         <div class="col">
-            <h1 style="text-align: center;">Employee</h1>
             <div style="width:50%; margin: 25px auto;">
                 <form action = "/add/employee" method="GET">
                     <div class="form-group">
@@ -27,11 +29,15 @@
                         <button class="btn btn-lg btn-primary btn-block">Pay Employee</button>
                     </div>
                 </form>
+                <form action = "/payroll/employee" method="GET">
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-block">Payroll Events</button>
+                    </div>
+                </form>
             </div>
         </div>
 
         <div class="col">
-            <h1 style="text-align: center;">Customer</h1>
             <div style="width:50%; margin: 25px auto;">
                 <form action = "/add/customer" method="GET">
                     <div class="form-group">
@@ -43,11 +49,20 @@
                         <button class="btn btn-lg btn-primary btn-block">List Customer</button>
                     </div>
                 </form>
+                <form action = "/create/invoice" method="GET">
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-block">Create Invoice</button>
+                    </div>
+                </form>
+                <form action = "/invoice/history" method="GET">
+                    <div class="form-group">
+                        <button class="btn btn-lg btn-primary btn-block">Invoice History</button>
+                    </div>
+                </form>
             </div>
         </div>
 
         <div class="col">
-            <h1 style="text-align: center;">Vendor</h1>
             <div style="width:50%; margin: 25px auto;">
                 <form action = "/add/vendor" method="GET">
                     <div class="form-group">

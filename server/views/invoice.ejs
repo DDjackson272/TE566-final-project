@@ -8,21 +8,25 @@
 </head>
 <body>
 <div>
-    <h1 style="text-align: center">Pay Employee</h1>
+    <h1 style="text-align: center">Create Invoice</h1>
 </div>
 <div class="container">
     <div class="text-center">
-        <form action = "/pay/employee" method="POST">
-            <span>Employee to Pay:</span>
+        <form action = "/create/invoice" method="POST">
+            <span>Customer:</span>
             <select name="names">
-                <% employeeNames.forEach(function(employee){ %>
-                <option value="<%=employee.firstName+' '+employee.lastName%>">
-                    <%=employee.firstName+' '+employee.lastName%>
-                </option>
+                <% customers.forEach(function(customer){ %>
+                <option value="<%=customer.CompanyName%>"><%=customer.CompanyName%></option>
                 <% }) %>
             </select>
+            <div class="form-group" style="margin: 20px auto; width: 50%">
+                <input class="form-control" type="text" name="Units" placeholder="Units">
+            </div>
+            <div class="form-group">
+                <h4>Number of units in stock: <%=total%>.</h4>
+            </div>
             <div style="width: 30%; margin: 20px auto">
-                <button class="btn btn-lg btn-primary btn-block">Pay</button>
+                <button class="btn btn-lg btn-primary btn-block">Create</button>
             </div>
         </form>
         <div style="width: 30%; margin: 20px auto">

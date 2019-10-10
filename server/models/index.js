@@ -65,7 +65,30 @@ let payrollEvents = "create table Payroll (" +
     "EmployeeFirstName varchar(255)," +
     "EmployeeLastName varchar(255)," +
     "PaymentValue float(8)," +
+    "WithholdingValue float(8)," +
+    "DatePaid timestamp not null default current_timestamp," +
     "PRIMARY KEY (event_id)" +
+    ");";
+
+let invoices = "create table Invoice (" +
+    "invoice_id int NOT NULL AUTO_INCREMENT," +
+    "CompanyName varchar(255)," +
+    "UnitNum int," +
+    "Date timestamp not null default current_timestamp," +
+    "PRIMARY KEY (invoice_id)" +
+    ");";
+
+let balanceSheet = "create table balance_sheet (" +
+    "Cash varchar(255)," +
+    "AccountsReceivable varchar(255)," +
+    "Inventory varchar(255)," +
+    "LandAndBuildings varchar(255)," +
+    "Equipment varchar(255)," +
+    "FurnitureAndFixture varchar(255)," +
+    "AccountsPayable varchar(255)," +
+    "NotesPayable varchar(255)," +
+    "Accruals varchar(255)," +
+    "Mortgage varchar(255)" +
     ");";
 
 connection.query(employees, function(err){
@@ -89,6 +112,18 @@ connection.query(vendors, function(err){
 connection.query(payrollEvents, function(err){
     if(err){
         console.log(err.message);
+    }
+});
+
+connection.query(invoices, function(err){
+   if(err){
+       console.log(err.message);
+   }
+});
+
+connection.query(balanceSheet, function(err){
+    if(err){
+        console.log(err.message)
     }
 });
 
