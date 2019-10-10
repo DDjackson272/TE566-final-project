@@ -144,7 +144,128 @@ let nameTable = {
     InventorySell: inventorySell
 };
 
+let dummyData = {
+    Employee: [{
+        FirstName: "Joe",
+        LastName: "Doe",
+        Address1: "123 Front Street",
+        Address2: "Apt 111",
+        City: "Urbana",
+        State: "IL",
+        ZipCode: "61801",
+        SSN: "123-123-3231",
+        WithHolding: "0",
+        Salary: 12500
+    }, {
+        FirstName: "Enze",
+        LastName: "Ding",
+        Address1: "1010 E College St",
+        Address2: "Room 352",
+        City: "Champaign",
+        State: "IL",
+        ZipCode: "61820",
+        SSN:"117-031-4312",
+        WithHolding: "2",
+        Salary: 11200
+    }], BalanceSheet: [{
+        Cash: 200000,
+        AccountsReceivable: 0,
+        Inventory: 12360,
+        LandAndBuildings: 0,
+        Equipment: 0,
+        FurnitureAndFixture: 0,
+        AccountsPayable: 0,
+        NotesPayable: 0,
+        Accruals: 0,
+        Mortgage: 0
+    }], IncomeStatement: [{
+        Sales: 1000000,
+        CostOfGoods: 228000,
+        Payrolls: 0,
+        PayrollWithholding: 0,
+        Bills: 0,
+        AnnualExpenses: 0,
+        OtherIncome: 0
+    }], InventorySell: [{
+        CanBeBuildUnits: 0,
+        CompleteUnits: 4000,
+        TotalValue: 10000
+    }], Customer: [{
+        CompanyName: "Amazon Service Inc.",
+        Address1: "300 Pine St",
+        City: "Seattle",
+        State: "WA",
+        ZipCode: "98103",
+        Price: 2.5
+    }], Vendor: [{
+        Part: "Wheels",
+        PricePerUnit: 0.01
+    }, {
+        Part: "Windshield Glass",
+        PricePerUnit: 0.05
+    }, {
+        Part: "Interior",
+        PricePerUnit: 0.05
+    }, {
+        Part: "Tank",
+        PricePerUnit: 0.1
+    }, {
+        Part: "Axles",
+        PricePerUnit: 0.01
+    }, {
+        Part: "Cab",
+        PricePerUnit: 0.1
+    }, {
+        Part: "Body",
+        PricePerUnit: 0.1
+    }, {
+        Part: "Box",
+        PricePerUnit: 0.05
+    }], InventoryBuy: [{
+        Part: "Wheels",
+        PricePerUnit: 0.01,
+        Quantity: 10000,
+        TotalValue: 100
+    }, {
+        Part: "Windshield Glass",
+        PricePerUnit: 0.05,
+        Quantity: 10000,
+        TotalValue: 500
+    }, {
+        Part: "Interior",
+        PricePerUnit: 0.05,
+        Quantity: 10000,
+        TotalValue: 500
+    }, {
+        Part: "Tank",
+        PricePerUnit: 0.1,
+        Quantity: 10000,
+        TotalValue: 1000
+    }, {
+        Part: "Axles",
+        PricePerUnit: 0.01,
+        Quantity: 10000,
+        TotalValue: 100
+    }, {
+        Part: "Cab",
+        PricePerUnit: 0.1,
+        Quantity: 10000,
+        TotalValue: 1000
+    }, {
+        Part: "Body",
+        PricePerUnit: 0.1,
+        Quantity: 10000,
+        TotalValue: 1000
+    }, {
+        Part: "Box",
+        PricePerUnit: 0.05,
+        Quantity: 10000,
+        TotalValue: 500
+    }]
+};
+
 // Initialize tables: delete the old ones and create new ones.
+// At the mean time, insert dummy data into the newly created tables.
 Object.keys(nameTable).forEach(function(name){
     connection.query(drop(name), function(err){
         if (err) {
@@ -153,12 +274,20 @@ Object.keys(nameTable).forEach(function(name){
             connection.query(nameTable[name], function(err){
                 if (err) {
                     console.log(`Error when creating new table ${name}!`);
+                } else {
+                    if (name in dummyData){
+                        dummyData[name].forEach(function(data){
+                            connection.query(`insert into ${name} set ?`, data, function(err){
+                                if (err) {
+                                    console.log(`Error when inserting dummy data into ${name}! ${err}`)
+                                }
+                            })
+                        });
+                    }
                 }
             })
         }
     })
 });
-
-// Add some dummy data in to tables
 
 module.exports = connection;
