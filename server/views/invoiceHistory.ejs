@@ -21,7 +21,7 @@
             <tr>
                 <td><%= (new Date(invoice.Date)).toISOString().split("T")[0]%></td>
                 <td><%= invoice.CompanyName%></td>
-                <td><%= invoice.UnitNum%></td>
+                <td><%= invoice.Quantity%></td>
             </tr>
         <% }) %>
     </table>

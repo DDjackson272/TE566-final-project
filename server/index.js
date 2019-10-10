@@ -227,7 +227,7 @@ app.get("/create/invoice", function(req, res){
 app.post("/create/invoice", function(req, res){
     let invoiceRecord = {
         CompanyName: req.body.names,
-        UnitNum: req.body.Units
+        Quantity: req.body.Units
     };
 
     db.query('insert into Invoice set ?', invoiceRecord, function(err){
@@ -243,7 +243,7 @@ app.post("/create/invoice", function(req, res){
 });
 
 app.get("/invoice/history", function(req, res){
-    let query = "select CompanyName, UnitNum, DATE(Date) as Date from Invoice;";
+    let query = "select CompanyName, Quantity, DATE(Date) as Date from Invoice;";
 
     db.query(query, function(err, result){
         if (err) {
