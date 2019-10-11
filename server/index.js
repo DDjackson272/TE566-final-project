@@ -8,6 +8,50 @@ const app = express();
 
 let TOTAL_INVENTORY = 1000;
 
+function salaryAfterTax(salary) {
+    const stateTaxRate = 0.0495;
+    const ficaRate = 0.062;
+    const medicareRate = [0.0145, 0.0235];
+    const federalTaxTate = [0.1, 0.12, 0.22, 0.24, 0.32, 0.35, 0.37];
+    const annualIncome = salary * 12;
+    let totalTax = 0.0;
+    // stateTax
+    totalTax += annualIncome * stateTaxRate / 12;
+
+    // fica
+    if (annualIncome <= 132900) {
+        totalTax += annualIncome * ficaRate / 12;
+    } else {
+        totalTax += 132900 * ficaRate / 12;
+    }
+
+    // medicare
+    if (annualIncome <= 200000) {
+        totalTax += medicareRate[0] * annualIncome / 12;
+    } else {
+        totalTax += (medicareRate[0] * 200000 + medicareRate[1] * (annualIncome-200000))/12;
+    }
+
+    // federal
+    if (annualIncome <= 9700){
+        totalTax += federalTaxTate[0] * annualIncome/12;
+    } else if (annualIncome <= 39475) {
+        totalTax += (970 + federalTaxTate[1] * (annualIncome-9700))/12;
+    } else if (annualIncome <= 84200) {
+        totalTax += (4543 + federalTaxTate[2] * (annualIncome-39475))/12;
+    } else if (annualIncome <= 160725) {
+        totalTax += (14382.5 + federalTaxTate[3] * (annualIncome-84200))/12;
+    } else if (annualIncome <= 204100) {
+        totalTax += (32748.5 + federalTaxTate[4] * (annualIncome-160725))/12;
+    } else if (annualIncome <= 510300) {
+        totalTax += (46628.5 + federalTaxTate[5] * (annualIncome-204100))/12;
+    } else {
+        totalTax += (153798.5 + federalTaxTate[6] * (annualIncome-510300))/12;
+    }
+
+    return salary - totalTax;
+}
+
 app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -174,23 +218,44 @@ app.post("/pay/employee", function(req, res){
                 res.redirect("/");
                 return;
             }
-            let salary = result[0].Salary;
-            let withHolding = result[0].WithHolding;
+            let salary = parseFloat(result[0].Salary);
+            let disbursement = salaryAfterTax(salary);
             let payRollRecord = {
                 EmployeeFirstName: firstName,
                 EmployeeLastName: lastName,
-                Disbursement: salary,
-                WithholdingValue: withHolding
+                Disbursement: disbursement,
+                WithholdingValue: salary - disbursement
             };
-            db.query('insert into Payroll set ?', payRollRecord, function(err){
-                if (err) {
+
+            // first deduct the before tax salary from BalanceSheet.Cash
+            // then insert the record into table Payroll
+            // then update payroll record to table IncomeStatement
+            db.query(`update BalanceSheet set Cash = Cash - ${salary};`, function(error){
+                if (error) {
                     return res.status(400).json({
-                        message:err.message
-                    })
+                        message:error.message
+                    });
                 } else {
-                    res.redirect("/");
+                    db.query('insert into Payroll set ?', payRollRecord, function(err){
+                        if (err) {
+                            return res.status(400).json({
+                                message:err.message
+                            })
+                        } else {
+                            db.query(`update IncomeStatement set Payrolls = Payrolls + ${disbursement}, 
+                            PayrollWithholding = PayrollWithholding + ${salary-disbursement};`, function(e){
+                                if (e) {
+                                    return res.status(400).json({
+                                        message: e.message
+                                    })
+                                } else {
+                                    res.redirect("/");
+                                }
+                            });
+                        }
+                    })
                 }
-            })
+            });
         }
     });
 });
@@ -265,13 +330,13 @@ app.get('/balance/sheet', function(req, res){
                 message: err.message
             })
         } else {
-            let totalCurrentAssets = parseInt(result[0].Cash) + parseInt(result[0].AccountsReceivable)
-                + parseInt(result[0].Inventory);
-            let totalFixedAssets = parseInt(result[0].LandAndBuildings) + parseInt(result[0].Equipment)
-                + parseInt(result[0].FurnitureAndFixture);
-            let totalCurrentLiabilities = parseInt(result[0].AccountsPayable) + parseInt(result[0].NotesPayable)
-                + parseInt(result[0].Accruals);
-            let totalLongTermDebt = parseInt(result[0].Mortgage);
+            let totalCurrentAssets = parseFloat(result[0].Cash) + parseFloat(result[0].AccountsReceivable)
+                + parseFloat(result[0].Inventory);
+            let totalFixedAssets = parseFloat(result[0].LandAndBuildings) + parseFloat(result[0].Equipment)
+                + parseFloat(result[0].FurnitureAndFixture);
+            let totalCurrentLiabilities = parseFloat(result[0].AccountsPayable) + parseFloat(result[0].NotesPayable)
+                + parseFloat(result[0].Accruals);
+            let totalLongTermDebt = parseFloat(result[0].Mortgage);
             let sheet = {
                 Assets: {
                     Cash: result[0].Cash,
@@ -308,15 +373,15 @@ app.get('/income/statement', function(req, res){
                message: err.message
            })
        } else {
-           let sales = parseInt(result[0].Sales);
-           let cogs = parseInt(result[0].CostOfGoods);
-           let payrolls = parseInt(result[0].Payrolls);
-           let payrollWithholding = parseInt(result[0].PayrollWithholding);
-           let bills = parseInt(result[0].Bills);
-           let annualExpenses =  parseInt(result[0].AnnualExpenses);
-           let otherIncome = parseInt(result[0].OtherIncome);
-           let operatingImcome = (sales-cogs)-(payrolls + payrollWithholding + bills + annualExpenses);
-           let incomeTaxes = 0.05 * operatingImcome;
+           let sales = parseFloat(result[0].Sales);
+           let cogs = parseFloat(result[0].CostOfGoods);
+           let payrolls = parseFloat(result[0].Payrolls);
+           let payrollWithholding = parseFloat(result[0].PayrollWithholding);
+           let bills = parseFloat(result[0].Bills);
+           let annualExpenses =  parseFloat(result[0].AnnualExpenses);
+           let otherIncome = parseFloat(result[0].OtherIncome);
+           let operatingIncome = (sales-cogs)-(payrolls + payrollWithholding + bills + annualExpenses);
+           let incomeTaxes = 0.05 * operatingIncome;
            let statement = {
                Sales: {
                    "Sales": sales,
@@ -330,9 +395,9 @@ app.get('/income/statement', function(req, res){
                    "Total Expenses": payrolls + payrollWithholding + bills + annualExpenses
                }, Other: {
                    "Other Income": otherIncome,
-                   "Operating Income": operatingImcome,
+                   "Operating Income": operatingIncome,
                    "Income Taxes": incomeTaxes,
-                   "Net Income": operatingImcome-incomeTaxes
+                   "Net Income": operatingIncome-incomeTaxes
                }
            };
            return res.render('incomeStatement.ejs', {statement: statement});

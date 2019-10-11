@@ -77,34 +77,34 @@ let payrollEvents = "create table Payroll (" +
 let invoices = "create table Invoice (" +
     "invoice_id int NOT NULL AUTO_INCREMENT," +
     "CompanyName varchar(255)," +
-    "Quantity int," +
+    "Quantity Float(8)," +
     "Date timestamp not null default current_timestamp," +
-    "PricePerUnit varchar(255)," +
-    "TotalValue varchar(255)," +
+    "PricePerUnit Float(8)," +
+    "TotalValue Float(8)," +
     "PRIMARY KEY (invoice_id)" +
     ");";
 
 let balanceSheet = "create table BalanceSheet (" +
-    "Cash varchar(255)," +
-    "AccountsReceivable varchar(255)," +
-    "Inventory varchar(255)," +
-    "LandAndBuildings varchar(255)," +
-    "Equipment varchar(255)," +
-    "FurnitureAndFixture varchar(255)," +
-    "AccountsPayable varchar(255)," +
-    "NotesPayable varchar(255)," +
-    "Accruals varchar(255)," +
-    "Mortgage varchar(255)" +
+    "Cash Float(8)," +
+    "AccountsReceivable Float(8)," +
+    "Inventory Float(8)," +
+    "LandAndBuildings Float(8)," +
+    "Equipment Float(8)," +
+    "FurnitureAndFixture Float(8)," +
+    "AccountsPayable Float(8)," +
+    "NotesPayable Float(8)," +
+    "Accruals Float(8)," +
+    "Mortgage Float(8)" +
     ");";
 
 let incomeStatement = "create table IncomeStatement (" +
-    "Sales varchar(255)," +
-    "CostOfGoods varchar(255)," +
-    "Payrolls varchar(255)," +
-    "PayrollWithholding varchar(255)," +
-    "Bills varchar(255)," +
-    "AnnualExpenses varchar(255)," +
-    "OtherIncome varchar(255)" +
+    "Sales Float(8)," +
+    "CostOfGoods Float(8)," +
+    "Payrolls Float(8)," +
+    "PayrollWithholding Float(8)," +
+    "Bills Float(8)," +
+    "AnnualExpenses Float(8)," +
+    "OtherIncome Float(8)" +
     ");";
 
 let purchaseOrder = "create table PurchaseOrder (" +
@@ -112,23 +112,23 @@ let purchaseOrder = "create table PurchaseOrder (" +
     "PurchaseOrderDate timestamp not null default current_timestamp," +
     "Supplier varchar(255)," +
     "Part varchar(255)," +
-    "Quantity varchar(255)," +
-    "PricePerPart varchar(255)," +
-    "TotalValue varchar(255)," +
+    "Quantity Float(8)," +
+    "PricePerPart Float(8)," +
+    "TotalValue Float(8)," +
     "PRIMARY KEY (PurchaseOrder_id)" +
     ");";
 
 let inventoryBuy = "create table InventoryBuy (" +
     "Part varchar(255)," +
-    "PricePerUnit varchar(255)," +
-    "Quantity varchar(255)," +
-    "TotalValue varchar(255)" +
+    "PricePerUnit Float(8)," +
+    "Quantity Float(8)," +
+    "TotalValue Float(8)" +
     ");";
 
 let inventorySell = "create table InventorySell (" +
-    "CanBeBuildUnits varchar(255)," +
-    "CompleteUnits varchar(255)," +
-    "TotalValue varchar(255)" +
+    "CanBeBuildUnits Float(8)," +
+    "CompleteUnits Float(8)," +
+    "TotalValue Float(8)" +
     ");";
 
 let nameTable = {
@@ -154,7 +154,7 @@ let dummyData = {
         State: "IL",
         ZipCode: "61801",
         SSN: "123-123-3231",
-        WithHolding: "0",
+        WithHolding: 0,
         Salary: 12500
     }, {
         FirstName: "Enze",
@@ -165,7 +165,7 @@ let dummyData = {
         State: "IL",
         ZipCode: "61820",
         SSN:"117-031-4312",
-        WithHolding: "2",
+        WithHolding: 2,
         Salary: 11200
     }], BalanceSheet: [{
         Cash: 200000,
@@ -273,13 +273,13 @@ Object.keys(nameTable).forEach(function(name){
         } else {
             connection.query(nameTable[name], function(err){
                 if (err) {
-                    console.log(`Error when creating new table ${name}!`);
+                    console.log(`Error when creating new table ${name}! ${err.message}`);
                 } else {
                     if (name in dummyData){
                         dummyData[name].forEach(function(data){
                             connection.query(`insert into ${name} set ?`, data, function(err){
                                 if (err) {
-                                    console.log(`Error when inserting dummy data into ${name}! ${err}`)
+                                    console.log(`Error when inserting dummy data into ${name}! ${err.message}`)
                                 }
                             })
                         });
