@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+        .first {
+            width: 50%;
+            float:left;
+            margin-bottom: 10px;
+            padding-right: 20px;
+            text-align: left
+        }
+        .second {
+            width: 50%;
+            float:left;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Balance Sheet</h1>
+</div>
+<div class="container">
+    <div>
+        <div class="first" style="text-align: center">
+            <h4 style="text-align: center">Assets</h4>
+            <div class="first">
+                <span>Cash</span><br>
+                <span>Accounts Receivable</span><br>
+                <span>Inventory</span><br>
+                <span><b>Total Current Assets</b></span><br>
+                <span>Land/Buildings</span><br>
+                <span>Equipment</span><br>
+                <span>Furniture and Fixture</span><br>
+                <span><b>Total Fixed Assets</b></span><br>
+                <span><b>Total Assets</b></span>
+            </div>
+            <div class="second">
+                <span>$<%=sheet.Assets.Cash%></span><br>
+                <span>$<%=sheet.Assets.AccountsReceivable%></span><br>
+                <span>$<%=sheet.Assets.Inventory%></span><br>
+                <span><b>$<%=sheet.Total.TotalCurrentAssets%></b></span><br>
+                <span>$<%=sheet.Assets.LandAndBuildings%></span><br>
+                <span>$<%=sheet.Assets.Equipment%></span><br>
+                <span>$<%=sheet.Assets.FurnitureAndFixture%></span><br>
+                <span><b>$<%=sheet.Total.TotalFixedAssets%></b></span><br>
+                <span><b>$<%=sheet.Total.TotalAssets%></b></span>
+            </div>
+        </div>
+        <div class="second" style="text-align: center">
+            <h4 style="text-align: center">Liabilities & Net Worth</h4>
+            <div class="first">
+                <span>Accounts Payable</span><br>
+                <span>Notes Payable</span><br>
+                <span>Accruals</span><br>
+                <span><b>Total Current Liabilities</b></span><br>
+                <span>Mortgage</span><br>
+                <span><b>Total Long Term Debt</b></span><br><br>
+                <span><b>Total Liabilities</b></span><br>
+                <span><b>Net Worth</b></span>
+            </div>
+            <div class="second">
+                <span>$<%=sheet.LiabilitiesNetWorth.AccountsPayable%></span><br>
+                <span>$<%=sheet.LiabilitiesNetWorth.NotesPayable%></span><br>
+                <span>$<%=sheet.LiabilitiesNetWorth.Accruals%></span><br>
+                <span><b>$<%=sheet.Total.TotalCurrentLiabilities%></b></span><br>
+                <span>$<%=sheet.LiabilitiesNetWorth.Mortgage%></span><br>
+                <span><b>$<%=sheet.Total.TotalLongTermDebt%></b></span><br><br>
+                <span><b>$<%=sheet.Total.TotalLiabilities%></b></span><br>
+                <span><b>$<%=sheet.Total.NetWorth%></b></span>
+            </div>
+        </div>
+        <div style="width: 30%; margin: 20px auto">
+            <a href="/">
+                <button class="btn btn-lg btn-primary btn-block">Return</button>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

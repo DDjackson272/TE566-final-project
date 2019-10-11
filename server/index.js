@@ -256,6 +256,50 @@ app.get("/invoice/history", function(req, res){
     })
 });
 
+app.get('/balance/sheet', function(req, res){
+    let query = 'select * from BalanceSheet;';
+
+    db.query(query, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            })
+        } else {
+            let totalCurrentAssets = parseInt(result[0].Cash) + parseInt(result[0].AccountsReceivable)
+                + parseInt(result[0].Inventory);
+            let totalFixedAssets = parseInt(result[0].LandAndBuildings) + parseInt(result[0].Equipment)
+                + parseInt(result[0].FurnitureAndFixture);
+            let totalCurrentLiabilities = parseInt(result[0].AccountsPayable) + parseInt(result[0].NotesPayable)
+                + parseInt(result[0].Accruals);
+            let totalLongTermDebt = parseInt(result[0].Mortgage);
+            let sheet = {
+                Assets: {
+                    Cash: result[0].Cash,
+                    AccountsReceivable: result[0].AccountsReceivable,
+                    Inventory: result[0].Inventory,
+                    LandAndBuildings: result[0].LandAndBuildings,
+                    Equipment: result[0].Equipment,
+                    FurnitureAndFixture: result[0].FurnitureAndFixture
+                }, LiabilitiesNetWorth: {
+                    AccountsPayable: result[0].AccountsPayable,
+                    NotesPayable: result[0].NotesPayable,
+                    Accruals: result[0].Accruals,
+                    Mortgage: result[0].Mortgage,
+                }, Total: {
+                    TotalCurrentAssets: totalCurrentAssets,
+                    TotalFixedAssets: totalFixedAssets,
+                    TotalAssets: totalCurrentAssets + totalFixedAssets,
+                    TotalCurrentLiabilities: totalCurrentLiabilities,
+                    TotalLongTermDebt: totalLongTermDebt,
+                    TotalLiabilities: totalCurrentLiabilities + totalLongTermDebt,
+                    NetWorth: totalCurrentAssets + totalFixedAssets - totalCurrentLiabilities - totalLongTermDebt
+                }};
+            console.log(sheet);
+            res.render('balanceSheet', {sheet: sheet})
+        }
+    })
+});
+
 app.listen(PORT, function () {
     console.log(`Server running on port: ${PORT}`)
 });
