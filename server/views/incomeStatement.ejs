@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+        .first {
+            width: 50%;
+            float:left;
+            margin-bottom: 10px;
+            padding-right: 20px;
+            text-align: left
+        }
+        .second {
+            width: 50%;
+            float:left;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Income Statement</h1>
+</div>
+<div class="container">
+    <% Object.keys(statement).forEach(function(key){ %>
+        <div style="width: 60%; margin: auto; text-align: center">
+            <h3><%=key%></h3>
+            <div class="first">
+            <% Object.keys(statement[key]).forEach(function(keyOfKey){ %>
+                <% if (['Gross Profit', 'Total Expenses', 'Net Income'].indexOf(keyOfKey) >= 0) {%>
+                    <span><b><%=keyOfKey%></b></span><br>
+                <% } else { %>
+                    <span><%=keyOfKey%></span><br>
+                <% } %>
+            <% }) %>
+            </div>
+            <div class="second">
+                <% Object.keys(statement[key]).forEach(function(keyOfKey){ %>
+                    <% if (['Gross Profit', 'Total Expenses', 'Net Income'].indexOf(keyOfKey) >= 0) {%>
+                        <span><b>$<%=statement[key][keyOfKey]%></b></span>
+                    <% } else { %>
+                        <span>$<%=statement[key][keyOfKey]%></span><br>
+                    <% } %>
+                <% }) %>
+            </div>
+        </div>
+    <%})%>
+    <div style="width: 30%; margin: 20px auto">
+        <a href="/">
+            <button class="btn btn-lg btn-primary btn-block">Return</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

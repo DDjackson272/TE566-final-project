@@ -294,10 +294,50 @@ app.get('/balance/sheet', function(req, res){
                     TotalLiabilities: totalCurrentLiabilities + totalLongTermDebt,
                     NetWorth: totalCurrentAssets + totalFixedAssets - totalCurrentLiabilities - totalLongTermDebt
                 }};
-            console.log(sheet);
             res.render('balanceSheet', {sheet: sheet})
         }
     })
+});
+
+app.get('/income/statement', function(req, res){
+   let  query = 'select * from IncomeStatement;';
+
+   db.query(query, function(err, result){
+       if (err) {
+           return res.status(400).json({
+               message: err.message
+           })
+       } else {
+           let sales = parseInt(result[0].Sales);
+           let cogs = parseInt(result[0].CostOfGoods);
+           let payrolls = parseInt(result[0].Payrolls);
+           let payrollWithholding = parseInt(result[0].PayrollWithholding);
+           let bills = parseInt(result[0].Bills);
+           let annualExpenses =  parseInt(result[0].AnnualExpenses);
+           let otherIncome = parseInt(result[0].OtherIncome);
+           let operatingImcome = (sales-cogs)-(payrolls + payrollWithholding + bills + annualExpenses);
+           let incomeTaxes = 0.05 * operatingImcome;
+           let statement = {
+               Sales: {
+                   "Sales": sales,
+                   "COGs": cogs,
+                   "Gross Profit": sales-cogs
+               }, Expenses: {
+                   "Payroll": payrolls,
+                   "Payroll Withholding": payrollWithholding,
+                   "Bills": bills,
+                   "Annual Expenses": annualExpenses,
+                   "Total Expenses": payrolls + payrollWithholding + bills + annualExpenses
+               }, Other: {
+                   "Other Income": otherIncome,
+                   "Operating Income": operatingImcome,
+                   "Income Taxes": incomeTaxes,
+                   "Net Income": operatingImcome-incomeTaxes
+               }
+           };
+           return res.render('incomeStatement.ejs', {statement: statement});
+       }
+   })
 });
 
 app.listen(PORT, function () {
