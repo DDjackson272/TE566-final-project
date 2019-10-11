@@ -381,7 +381,7 @@ app.get('/income/statement', function(req, res){
            let annualExpenses =  parseFloat(result[0].AnnualExpenses);
            let otherIncome = parseFloat(result[0].OtherIncome);
            let operatingIncome = (sales-cogs)-(payrolls + payrollWithholding + bills + annualExpenses);
-           let incomeTaxes = 0.05 * operatingIncome;
+           let incomeTaxes = 0.0495 * operatingIncome;
            let statement = {
                Sales: {
                    "Sales": sales,
