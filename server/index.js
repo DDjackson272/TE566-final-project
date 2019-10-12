@@ -490,6 +490,90 @@ app.get('/inventory', function(req, res){
     })
 });
 
+app.get('/create/purchase', function(req, res){
+   let getParts = 'select * from InventoryBuy;';
+
+   db.query(getParts, function(err, result){
+       if (err) {
+           return res.status(400).json({
+               message: err.message
+           })
+       } else {
+           return res.render('createPurchase', {parts: result})
+       }
+   })
+});
+
+// update BalanceSheet.AccountsPayable and BalanceSheet.Inventory
+// update IncomeStatement.Bills
+// insert record into table PurchaseOrder
+app.post('/create/purchase', function(req, res){
+    let part = req.body.Part;
+    let quantity = parseFloat(req.body.Quantity);
+
+    // first get PricePerUnit from InventoryBuy
+    db.query(`select PricePerUnit from InventoryBuy where Part="${part}";`, function(err, costResult){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            })
+        } else {
+            let costPerUnit = parseFloat(costResult[0].PricePerUnit);
+            let payableBills = quantity * costPerUnit;
+            let poRecord = {
+                Part: part,
+                Quantity: quantity,
+                PricePerPart: costPerUnit,
+                TotalValue: payableBills
+            };
+
+            // then update BalanceSheet first
+            db.query(`update BalanceSheet set AccountsPayable=AccountsPayable+${payableBills}, 
+            Inventory=Inventory+${payableBills};`, function(err){
+                if (err) {
+                    return res.status(400).json({
+                        message: err.message
+                    })
+                }
+            });
+
+            // update IncomeStatement
+            db.query(`update IncomeStatement set Bills=Bills+${payableBills};`, function(err){
+                if(err) {
+                    return res.status(400).json({
+                        message: err.message
+                    })
+                }
+            });
+
+            // finally insert record into table PurchaseOrder
+            db.query(`insert into PurchaseOrder set ?`, poRecord, function(err){
+                if (err) {
+                    return res.status(400).json({
+                        message: err.message
+                    })
+                } else {
+                    return res.redirect("/");
+                }
+            })
+        }
+    })
+});
+
+app.get('/purchase/history', function(req, res){
+    let historyQuery = "select * from PurchaseOrder;";
+
+    db.query(historyQuery, function(err, result){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            })
+        } else {
+            res.render('purchaseHistory', {histories: result});
+        }
+    })
+});
+
 app.listen(PORT, function () {
     console.log(`Server running on port: ${PORT}`)
 });

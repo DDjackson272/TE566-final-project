@@ -108,9 +108,8 @@ let incomeStatement = "create table IncomeStatement (" +
     ");";
 
 let purchaseOrder = "create table PurchaseOrder (" +
-    "PurchaseOrder_id int," +
+    "PurchaseOrder_id int NOT NULL AUTO_INCREMENT," +
     "PurchaseOrderDate timestamp not null default current_timestamp," +
-    "Supplier varchar(255)," +
     "Part varchar(255)," +
     "Quantity Float(8)," +
     "PricePerPart Float(8)," +

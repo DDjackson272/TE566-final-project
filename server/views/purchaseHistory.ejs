@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div>
+    <h1 style="text-align: center">Purchase Order History</h1>
+</div>
+<div class="text-center">
+    <table border="1" cellpadding="3" cellspacing="0" align="center" style="width: 80%;margin:auto">
+        <tr>
+            <th>Date</th>
+            <th>Part</th>
+            <th>Quantity</th>
+            <th>Price/Unit</th>
+            <th>Total</th>
+        </tr>
+        <% histories.forEach(function(history){ %>
+            <tr>
+                <td><%= (new Date(history.PurchaseOrderDate)).toISOString().split("T")[0]%></td>
+                <td><%= history.Part%></td>
+                <td><%= history.Quantity%></td>
+                <td>$<%= history.PricePerPart%></td>
+                <td>$<%= history.TotalValue%></td>
+            </tr>
+        <% }) %>
+    </table>
+    <div style="width: 30%; margin: 20px auto">
+        <a href="/">
+            <button class="btn btn-lg btn-primary btn-block">Return</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
