@@ -15,13 +15,17 @@
         <tr>
             <th>Date</th>
             <th>Customer</th>
-            <th>Quality</th>
+            <th>Quantity</th>
+            <th>Price/Unit</th>
+            <th>Total</th>
         </tr>
         <% invoices.forEach(function(invoice){ %>
             <tr>
                 <td><%= (new Date(invoice.Date)).toISOString().split("T")[0]%></td>
                 <td><%= invoice.CompanyName%></td>
                 <td><%= invoice.Quantity%></td>
+                <td>$<%= invoice.PricePerUnit%></td>
+                <td>$<%= invoice.TotalValue%></td>
             </tr>
         <% }) %>
     </table>

@@ -6,8 +6,6 @@ const PORT = 81;
 
 const app = express();
 
-let TOTAL_INVENTORY = 1000;
-
 function salaryAfterTax(salary) {
     const stateTaxRate = 0.0495;
     const ficaRate = 0.062;
@@ -277,6 +275,7 @@ app.get('/payroll/employee', function(req, res){
 
 app.get("/create/invoice", function(req, res){
     let selectName = 'select CompanyName from Customer;';
+    let selectCompletedUnits = 'select CompleteUnits from inventorySell;';
 
     db.query(selectName, function(err, result){
         if (err) {
@@ -284,31 +283,94 @@ app.get("/create/invoice", function(req, res){
                 message: err.message
             });
         } else {
-            res.render('invoice', {customers: result, total: TOTAL_INVENTORY});
+            db.query(selectCompletedUnits, function(e, unitResult){
+                if (e) {
+                    return res.status(400).json({
+                        message: e.message
+                    })
+                } else {
+                    res.render('invoice', {customers: result, total: unitResult[0].CompleteUnits});
+                }
+            });
         }
     });
 });
 
+// update BalanceSheet.AccountsReceivable, IncomeStatement.Sales and IncomeStatement.COGs
+// and, of course, InventorySell.CompleteUnits and InventorySell.TotalValue,
+// finally, insert the created record into table Invoice, hell!
 app.post("/create/invoice", function(req, res){
-    let invoiceRecord = {
-        CompanyName: req.body.names,
-        Quantity: req.body.Units
-    };
+    let companyName = req.body.names;
+    let quantity = parseFloat(req.body.Units);
 
-    db.query('insert into Invoice set ?', invoiceRecord, function(err){
-        if (err) {
+    // get the price from customer
+    db.query(`select Price from Customer where CompanyName="${companyName}"`, function(error, priceResult){
+        if (error) {
             return res.status(400).json({
-                message:err.message
-            });
+                message: error.message
+            })
         } else {
-            TOTAL_INVENTORY -= req.body.Units;
-            res.redirect("/");
+            let price = parseFloat(priceResult[0].Price);
+            let sales = price * quantity;
+            // update BalanceSheet.AccountsReceivable
+            db.query(`update BalanceSheet set AccountsReceivable=AccountsReceivable+${sales};`, function(err){
+                if (err){
+                    return res.status(400).json({
+                        message: err.message
+                    })
+                } else {
+                    // get COG from table InventorySell
+                    db.query('select TotalValue/CompleteUnits as COG from InventorySell;', function(e, cost){
+                        if (e) {
+                            return res.status(400).json({
+                                message: e.message
+                            })
+                        } else {
+                            let cog = cost[0].COG;
+                            let invoiceRecord = {
+                                CompanyName: companyName,
+                                Quantity: quantity,
+                                PricePerUnit: price,
+                                TotalValue: sales
+                            };
+                            // update InventorySell.CompleteUnits and InventorySell.TotalValue
+                            db.query(`update InventorySell set TotalValue=TotalValue-${cog}*${quantity}, 
+                            CompleteUnits=CompleteUnits-${quantity};`, function(e){
+                                if(e) {
+                                    return res.status(400).json({
+                                        message: e.message
+                                    })
+                                }
+                            });
+                            // update IncomeStatement.Sales and IncomeStatement.COGs
+                            db.query(`update IncomeStatement set Sales=Sales+${sales}, 
+                            CostOfGoods=CostOfGoods+${cog}*${quantity};`, function(e){
+                                if (e) {
+                                    return res.status(400).json({
+                                        message: e.message
+                                    })
+                                }
+                            });
+                            // finally update the table Invoice
+                            db.query(`insert into Invoice set ?`, invoiceRecord, function(e){
+                                if (e) {
+                                    return res.status(400).json({
+                                        message: e.message
+                                    })
+                                } else {
+                                    return res.redirect("/");
+                                }
+                            })
+                        }
+                    });
+                }
+            })
         }
     })
 });
 
 app.get("/invoice/history", function(req, res){
-    let query = "select CompanyName, Quantity, DATE(Date) as Date from Invoice;";
+    let query = "select CompanyName, Quantity, DATE(Date) as Date, PricePerUnit, TotalValue from Invoice;";
 
     db.query(query, function(err, result){
         if (err) {

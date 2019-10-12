@@ -179,8 +179,8 @@ let dummyData = {
         Accruals: 0,
         Mortgage: 0
     }], IncomeStatement: [{
-        Sales: 1000000,
-        CostOfGoods: 228000,
+        Sales: 52412.5,
+        CostOfGoods: 0,
         Payrolls: 0,
         PayrollWithholding: 0,
         Bills: 0,
