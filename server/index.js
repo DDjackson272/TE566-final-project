@@ -405,6 +405,29 @@ app.get('/income/statement', function(req, res){
    })
 });
 
+app.get('/inventory', function(req, res){
+    let buyQuery = 'select * from InventoryBuy;';
+    let sellQuery = 'select * from InventorySell;';
+
+    db.query(buyQuery, function(err, buyResult){
+        if (err) {
+            return res.status(400).json({
+                message: err.message
+            });
+        } else {
+            db.query(sellQuery, function(e, sellResult){
+                if (e) {
+                    return res.status(400).json({
+                        message: e.message
+                    })
+                } else {
+                    return res.render('listInventory', {inventoryBuy: buyResult, inventorySell: sellResult})
+                }
+            });
+        }
+    })
+});
+
 app.listen(PORT, function () {
     console.log(`Server running on port: ${PORT}`)
 });

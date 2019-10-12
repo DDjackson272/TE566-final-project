@@ -170,7 +170,7 @@ let dummyData = {
     }], BalanceSheet: [{
         Cash: 200000,
         AccountsReceivable: 0,
-        Inventory: 12360,
+        Inventory: 26122.5,
         LandAndBuildings: 0,
         Equipment: 0,
         FurnitureAndFixture: 0,
@@ -187,9 +187,9 @@ let dummyData = {
         AnnualExpenses: 0,
         OtherIncome: 0
     }], InventorySell: [{
-        CanBeBuildUnits: 0,
-        CompleteUnits: 4000,
-        TotalValue: 10000
+        CanBeBuildUnits: 750,
+        CompleteUnits: 1000,
+        TotalValue: 770,
     }], Customer: [{
         CompanyName: "Amazon Service Inc.",
         Address1: "300 Pine St",
@@ -198,69 +198,96 @@ let dummyData = {
         ZipCode: "98103",
         Price: 2.5
     }], Vendor: [{
-        Part: "Wheels",
+        Part: "Axles",
         PricePerUnit: 0.01
     }, {
-        Part: "Windshield Glass",
+        Part: "Screw",
+        PricePerUnit: 0.02
+    }, {
+        Part: "Cab Casting",
         PricePerUnit: 0.05
     }, {
-        Part: "Interior",
+        Part: "Rims",
+        PricePerUnit: 0.01
+    }, {
+        Part: "Mixer",
         PricePerUnit: 0.05
+    }, {
+        Part: "Labor",
+        PricePerUnit: 0.1
     }, {
         Part: "Tank",
         PricePerUnit: 0.1
     }, {
-        Part: "Axles",
-        PricePerUnit: 0.01
+        Part: "Tires",
+        PricePerUnit: 0.02
     }, {
-        Part: "Cab",
+        Part: "Master Pack",
+        PricePerUnit: 0.02
+    }, {
+        Part: "Body Casting",
         PricePerUnit: 0.1
     }, {
-        Part: "Body",
+        Part: "Windshield",
         PricePerUnit: 0.1
     }, {
         Part: "Box",
         PricePerUnit: 0.05
     }], InventoryBuy: [{
-        Part: "Wheels",
-        PricePerUnit: 0.01,
-        Quantity: 10000,
-        TotalValue: 100
-    }, {
-        Part: "Windshield Glass",
-        PricePerUnit: 0.05,
-        Quantity: 10000,
-        TotalValue: 500
-    }, {
-        Part: "Interior",
-        PricePerUnit: 0.05,
-        Quantity: 10000,
-        TotalValue: 500
-    }, {
-        Part: "Tank",
-        PricePerUnit: 0.1,
-        Quantity: 10000,
-        TotalValue: 1000
-    }, {
         Part: "Axles",
         PricePerUnit: 0.01,
-        Quantity: 10000,
-        TotalValue: 100
+        Quantity: 330000,
+        TotalValue: 3300
     }, {
-        Part: "Cab",
-        PricePerUnit: 0.1,
-        Quantity: 10000,
-        TotalValue: 1000
+        Part: "Screw",
+        PricePerUnit: 0.02,
+        Quantity: 48250,
+        TotalValue: 965
     }, {
-        Part: "Body",
+        Part: "Cab Casting",
+        PricePerUnit: 0.05,
+        Quantity: 28250,
+        TotalValue: 1412.5
+    }, {
+        Part: "Rims",
+        PricePerUnit: 0.01,
+        Quantity: 6000,
+        TotalValue: 60
+    }, {
+        Part: "Mixer",
+        PricePerUnit: 0.05,
+        Quantity: 48250,
+        TotalValue: 2412.5
+    }, {
+        Part: "Labor",
         PricePerUnit: 0.1,
-        Quantity: 10000,
-        TotalValue: 1000
+        Quantity: 48250,
+        TotalValue: 4825
+    }, {
+        Part: "Tires",
+        PricePerUnit: 0.02,
+        Quantity: 6000,
+        TotalValue: 120
+    }, {
+        Part: "Master Pack",
+        PricePerUnit: 0.02,
+        Quantity: 48250,
+        TotalValue: 965
+    }, {
+        Part: "Body Casting",
+        PricePerUnit: 0.1,
+        Quantity: 48250,
+        TotalValue: 4825
+    }, {
+        Part: "Windshield",
+        PricePerUnit: 0.1,
+        Quantity: 48250,
+        TotalValue: 4825
     }, {
         Part: "Box",
         PricePerUnit: 0.05,
-        Quantity: 10000,
-        TotalValue: 500
+        Quantity: 48250,
+        TotalValue: 2412.5
     }]
 };
 

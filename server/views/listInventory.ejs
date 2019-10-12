@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Financial Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<style>
+    .table {
+        margin-bottom: 20px;
+    }
+</style>
+<body>
+<div>
+    <h1 style="text-align: center">Inventory</h1>
+</div>
+<div class="text-center">
+
+    <div>
+        <table border="1" cellpadding="3" cellspacing="0" align="center" style="width: 80%;margin:20px auto">
+            <tr>
+                <th>Part</th>
+                <th>Price/Unit</th>
+                <th>Quantity</th>
+                <th>Value</th>
+            </tr>
+            <% inventoryBuy.forEach(function(inventory){ %>
+                <tr>
+                    <td><%= inventory.Part %></td>
+                    <td><%= inventory.PricePerUnit%></td>
+                    <td><%= inventory.Quantity%></td>
+                    <td>$<%= inventory.TotalValue%></td>
+                </tr>
+            <% }) %>
+        </table>
+    </div>
+
+    <div>
+        <table border="1" cellpadding="3" cellspacing="0" align="center" style="width: 80%;margin:auto">
+            <tr>
+                <th>Total Units that can be built from current parts</th>
+                <th>Complete Units in stock</th>
+                <th>Total Value</th>
+                <th>COG/Unit</th>
+            </tr>
+            <% inventorySell.forEach(function(inventory){ %>
+                <tr>
+                    <td><%= inventory.CanBeBuildUnits%></td>
+                    <td><%= inventory.CompleteUnits%></td>
+                    <td>$<%= inventory.TotalValue%></td>
+                    <td>$<%= inventory.TotalValue/inventory.CompleteUnits%></td>
+                </tr>
+            <% }) %>
+        </table>
+    </div>
+
+    <div style="width: 30%; margin: 20px auto">
+        <a href="/">
+            <button class="btn btn-lg btn-primary btn-block">Return</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>
