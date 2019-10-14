@@ -506,6 +506,7 @@ app.get('/create/purchase', function(req, res){
 
 // update BalanceSheet.AccountsPayable and BalanceSheet.Inventory
 // update IncomeStatement.Bills
+// update InventoryBuy.Quantity and InventoryBuy.TotalValue
 // insert record into table PurchaseOrder
 app.post('/create/purchase', function(req, res){
     let part = req.body.Part;
@@ -540,6 +541,16 @@ app.post('/create/purchase', function(req, res){
             // update IncomeStatement
             db.query(`update IncomeStatement set Bills=Bills+${payableBills};`, function(err){
                 if(err) {
+                    return res.status(400).json({
+                        message: err.message
+                    })
+                }
+            });
+
+            // update InventoryBuy
+            db.query(`update InventoryBuy set Quantity=Quantity+${quantity}, 
+            TotalValue=TotalValue+PricePerUnit*${quantity};`, function(err){
+                if (err) {
                     return res.status(400).json({
                         message: err.message
                     })
