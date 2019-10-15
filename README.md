@@ -13,4 +13,20 @@ run locally.
 ![customer](/screenshot/Customer.png)
 ![inventory](/screenshot/Inventory.png)
 ![balanceSheet](/screenshot/BalanceSheet.png)
-![IncomeStatement](/screenshot/IncomeStatement.png)
+![incomeStatement](/screenshot/IncomeStatement.png)
+3. After paying employee Joe, who has monthly salary of $12,500, payroll events, balance sheet and income statements changed to:
+![payrollEventAfter](/screenshot/PayrollEventAfterPay.png)
+![balanceSheetAfter](/screenshot/BalanceSheetAfterPay.png)
+![incomeStatementAfter](/screenshot/IncomeStatementAfterPay.png)
+4. After create an invoice for customer Amazon Service Inc. with purchase of 500 units and retail price of $2.5/unit, 
+invoice history, inventory, balance sheet and income statements changed to:
+![invoiceHistory](/screenshot/InvoiceHistory.png)
+![inventoryAfterInvoice](/screenshot/InventoryAfter.png)
+![balanceSheetAfterInvoice](/screenshot/BalanceSheetAfterInvoice.png)
+![incomeStatementAfterInvoice](/screenshot/IncomeStatementAfterInvoice.png)
+5. After create a purchase order of Axles with quantity of 10,000 and cost of $0.01/part, PO history, inventory, 
+balance sheet and income statement changed to:
+![POHistory](/screenshot/POHistory.png)
+![InventoryAfterPO](/screenshot/InventoryAfterPO.png)
+![BalanceSheetAfterPO](/screenshot/BalanceSheetAfterPO.png)
+![IncomeStatementAfterPO](/screenshot/IncomeStatementAfterPO.png)
